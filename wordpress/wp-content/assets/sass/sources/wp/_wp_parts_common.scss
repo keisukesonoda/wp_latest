@@ -1,0 +1,20 @@
+/* -------------------------
+  wp parts COMMON
+------------------------- */
+.tmp-name {
+  color: red;
+  font-weight: bold;
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 100;
+}
+
+
+.link-blue {
+  color: #207d94;
+  &:hover {
+    color: #207d94 + 30;
+    transition: color 200ms ease-out 0s;
+  }
+}
+

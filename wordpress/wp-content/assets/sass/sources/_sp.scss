@@ -1,0 +1,156 @@
+//-------------------------------------
+// import files
+//-------------------------------------
+// @import "wp/wp_theme_sp";
+@import "mixin";
+@import "settings/reset";
+@import "settings/general";
+@import "settings/setting_sp";
+@import "settings/base";
+@import "parts/parts_common";
+@import "parts/parts_sp";
+@import "parts/loading";
+@import "helper";
+@import "wp/wp_native";
+@import "wp/wp_parts_common";
+@import "wp/wp_parts_sp";
+@import "wp/wp_cf7_sp";
+
+$mgnBase: 8%;
+
+$headerHeight: 14%;
+
+$colors: (
+  'base': $color-a,
+  'pink': #c60081,
+  'lightblue': #2099ff,
+  'deepgray': #5d5d5d,
+  'lightgray': #3e3e3e,
+  'beige': #f1ebe9,
+  'darkblue': #1f1f1f,
+  'menuGray': #d4d4d4,
+  'borderGray': #d8d8d8,
+);
+
+$lightCol: 80;
+
+$hoverColors: (
+  'base': $color-a + $lightCol,
+  'pink': #ed009a,
+  'lightblue': #20aeff,
+  'deepgray': map-get($colors, 'deepgray') + $lightCol,
+  'lightgray': map-get($colors, 'lightgray') + $lightCol,
+  'beige': map-get($colors, 'beige') + $lightCol,
+  'darkblue': map-get($colors, 'darkblue') + $lightCol,
+  'menuGray': map-get($colors, 'menuGray') + $lightCol,
+  'borderGray': map-get($colors, 'borderGray') + $lightCol,
+);
+
+
+@each $name, $color in $colors {
+  .bg-#{$name} {
+    background-color: $color;
+  }
+  .col-#{$name} {
+    color: $color;
+  }
+  .hov-col-#{$name} {
+    color: $color;
+  }
+}
+
+
+body {
+  @include getFontSize(24);
+}
+
+.ib-range {
+  > * {
+    @include getFontSize(24);
+  }
+}
+
+
+/* --------------------
+  javascript settings
+-------------------- */
+
+
+
+/* --------------------
+  project original
+-------------------- */
+
+
+/* titles
+-------------------- */
+
+
+
+/* tables
+-------------------- */
+
+
+
+/* boxes
+-------------------- */
+
+
+/* texts
+-------------------- */
+
+
+/* links
+-------------------- */
+
+
+/* btns
+-------------------- */
+
+
+/* arrows
+-------------------- */
+
+
+/* icons
+-------------------- */
+
+
+/* lists
+-------------------- */
+
+
+/* --------------------
+  common sections
+-------------------- */
+.wrapper {
+}
+
+/* contents
+-------------------- */
+
+
+/* header
+-------------------- */
+.header {
+}
+
+
+/* footer
+-------------------- */
+.footer {
+}
+
+
+/* 下層共通 lower
+-------------------- */
+body:not(.home) {
+}
+
+
+/* トップ
+-------------------- */
+body.home {
+}
+
+

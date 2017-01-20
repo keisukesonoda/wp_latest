@@ -1,0 +1,167 @@
+//-------------------------------------
+// import files
+//-------------------------------------
+@import "wp/wp_theme_pc";
+@import "mixin";
+@import "settings/reset";
+@import "settings/general";
+@import "settings/setting_pc";
+@import "settings/base";
+@import "parts/parts_common";
+@import "parts/parts_pc";
+@import "parts/loading";
+@import "helper";
+@import "wp/wp_native";
+@import "wp/wp_parts_common";
+@import "wp/wp_parts_pc";
+@import "wp/wp_cf7_pc";
+
+$mgnBase: 40px;
+
+$colors: (
+  'base': $color-a,
+  'pink': #c60081,
+  'lightblue': #2099ff,
+  'deepgray': #5d5d5d,
+  'lightgray': #3e3e3e,
+  'beige': #f1ebe9,
+  'darkblue': #1f1f1f,
+  'menuGray': #d4d4d4,
+);
+
+$lightCol: 80;
+
+$hoverColors: (
+  'base': $color-a + $lightCol,
+  'pink': #ed009a,
+  'lightblue': #20aeff,
+  'deepgray': map-get($colors, 'deepgray') + $lightCol,
+  'lightgray': map-get($colors, 'lightgray') + $lightCol,
+  'beige': map-get($colors, 'beige') + $lightCol,
+  'darkblue': map-get($colors, 'darkblue') + $lightCol,
+  'menuGray': map-get($colors, 'menuGray') + $lightCol,
+);
+
+
+@each $name, $color in $colors {
+  .bg-#{$name} {
+    background-color: $color;
+  }
+  .col-#{$name} {
+    color: $color;
+  }
+  .hov-col-#{$name} {
+    color: $color;
+    &:hover:not(.disable) {
+      color: map-get($hoverColors, #{$name});
+      // transition: color $hoverTransition linear 0s;
+      transition: all $hoverTransition linear 0s;
+    }
+  }
+}
+
+
+/* --------------------
+  javascript settings
+-------------------- */
+
+
+
+/* --------------------
+  project original
+-------------------- */
+
+/* titles
+-------------------- */
+
+
+
+
+/* tables
+-------------------- */
+
+
+
+/* boxes
+-------------------- */
+
+
+
+/* texts
+-------------------- */
+
+
+
+
+/* links
+-------------------- */
+
+
+
+
+
+/* btns
+-------------------- */
+
+
+
+
+/* arrows
+-------------------- */
+
+
+
+
+/* icons
+-------------------- */
+
+
+
+
+/* lists
+-------------------- */
+
+
+
+
+/* --------------------
+  common sections
+-------------------- */
+.wrapper {
+}
+
+/* contents
+-------------------- */
+
+
+
+
+/* header
+-------------------- */
+.header {
+}
+
+
+
+/* footer
+-------------------- */
+.footer {
+}
+
+
+/* common navigation
+-------------------- */
+
+
+
+/* 下層共通
+-------------------- */
+body:not(.home) {
+}
+
+/* トップ
+-------------------- */
+body.home {
+}
+
+

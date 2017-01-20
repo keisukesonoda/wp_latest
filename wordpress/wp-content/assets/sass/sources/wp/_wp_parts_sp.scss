@@ -1,0 +1,73 @@
+/* -------------------------
+  wp parts SP
+------------------------- */
+.tmp-name {
+  color: red;
+  font-weight: bold;
+  position: absolute;
+  top: 0; left: 0;
+}
+
+.message-nopost {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.editor {
+  font-family: $meiryoFont;
+  margin: 0 auto;
+  @extend .clearfix;
+  .editor-title {
+    margin: 3rem 0 1rem;
+  }
+  p {
+    line-height: 1.8;
+    letter-spacing: 1.5px;
+  }
+  a {
+    // @extend .link-blue;
+  }
+  > *:first-child {
+    margin-top: 0;
+  }
+  // spはalignなし
+  img.alignright, img.alignleft {
+    float: none;
+    display: block;
+    margin: 1em auto;
+    padding: 0;
+  }
+  .lsn {
+    list-style: none;
+    padding-left: 0;
+    li {
+      padding-left: 0;
+      text-indent: 0;
+    }
+  }
+
+
+  .flex-lists {
+    @extend .clearfix;
+    margin: 2em 0 2em -1em;
+    li {
+      float: left;
+      margin-top: 0;
+      line-height: 1.8;
+      margin-left: 1rem;
+      letter-spacing: 0;
+      font-size: 1.1rem;
+      &:before {
+        content: ">";
+        display: inline-block;
+        vertical-align: middle;
+        margin-top: -1px;
+        margin-right: .2rem;
+      }
+    }
+  }
+
+  span[class*=mt] {
+    display: block;
+  }
+}

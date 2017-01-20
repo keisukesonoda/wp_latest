@@ -1,0 +1,99 @@
+/* -------------------------
+  parts
+------------------------- */
+
+/* wrap content
+-------------------- */
+.wrapper {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+/* texts
+-------------------- */
+.tdu {
+  text-decoration: underline;
+}
+
+.tdn {
+  text-decoration: none !important;
+}
+
+
+/* links
+-------------------- */
+.lbs {
+  color: $color-a;
+  &:hover {
+    color: $color-a + 50;
+    text-decoration: underline;
+  }
+}
+
+.tdc {
+  border-bottom: 1px solid #9b9b9b;
+  &:hover {
+    border-bottom: none;
+  }
+}
+
+
+$colors: (
+  a: $color-a,
+  b: $color-b,
+  c: $color-c,
+  d: $color-d,
+);
+
+@each $hoge, $color in $colors {
+  .lc#{$hoge} {
+    color: $color;
+    text-decoration: underline;
+    &:link {color: $color;}
+    &:visited {color: $color;}
+    &:hover {color: $color + 30;}
+    &:active {color: $color;}
+  }
+}
+
+
+.fl-range {
+  @extend .clearfix;
+  > * {
+    float: left;
+  }
+}
+
+.ib-range {
+  font-size: 0;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  > * {
+    font-size: $font-size-base;
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+
+
+.frame-wrap {
+  position: relative;
+  @include wh(100%, 0);
+  padding-top: percentage(9/16);
+  > * {
+    @include wh(100%, 100%);
+    position: absolute;
+    top: 0; left: 0;
+  }
+}
+
+
+
+
+
+
+
