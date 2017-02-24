@@ -564,3 +564,11 @@ require get_parent_theme_file_path( '/inc/customizer.php' );
  * SVG icons functions and filters.
  */
 require get_parent_theme_file_path( '/inc/icon-functions.php' );
+
+// tinyMCEテンプレートのボタンをACF WYSIWYGにも表示
+add_filter( 'tinymce_templates_enable_media_buttons', function(){
+	// Displays insert template button on all visual editors
+	return true;
+});
+
+
