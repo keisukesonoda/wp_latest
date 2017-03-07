@@ -10,6 +10,7 @@ gulp.task('watch', () => {
   gulp.watch([
     `${CONFIG.PATH.other.plugins}/**`,
     `${CONFIG.PATH.dest.root}/*.php`,
+    `${CONFIG.PATH.dest.root}/**/*.php`,
   ], ['reload']);
 
   gulp.watch([

@@ -8,7 +8,7 @@ const GLOB = require('../gulpfile');
  */
 const CONFIG = {};
 CONFIG.THEME = {
-  master: 'basic',
+  master: 'mybasic',
 };
 
 CONFIG.DIR = {

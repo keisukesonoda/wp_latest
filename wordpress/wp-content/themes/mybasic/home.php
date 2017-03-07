@@ -74,21 +74,6 @@ $post_types = get_post_types($posts_args, 'object');
 	</div><!-- /archive -->
 
 
-	<div class="taxonomy mt10">
-		<div>
-			<h2 class="fsp4 mb2 b">カスタムタクソノミー</h2>
-			<?php $taxes = get_tax_terms(); ?>
-			<?php foreach( $taxes as $key => $tax ) : ?>
-				<?php $terms = $tax['terms']; ?>
-				<ul>
-					<?php foreach( $terms as $term ) : ?>
-						<li><a href="<?php echo $term['link']; ?>" class=""><?php echo $term['name']; ?></a></li>
-					<?php endforeach; ?>
-				</ul>
-			<?php endforeach; ?>
-		</div>
-	</div><!-- /taxonomy -->
-
 	<div class="include mt10">
 		<?php get_template_part('parts/content', 'button'); ?>
 	</div>
