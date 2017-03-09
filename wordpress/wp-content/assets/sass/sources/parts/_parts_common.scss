@@ -1,8 +1,8 @@
 /* -------------------------
-  parts
+  parts common
 ------------------------- */
 
-/* wrap content
+/* wrap content common
 -------------------- */
 .wrapper {
   width: 100%;
@@ -12,7 +12,7 @@
 
 
 
-/* texts
+/* texts common
 -------------------- */
 .tdu {
   text-decoration: underline;
@@ -23,7 +23,7 @@
 }
 
 
-/* links
+/* links common
 -------------------- */
 .lbs {
   color: $color-a;
@@ -94,6 +94,42 @@ $colors: (
 
 
 
+/* lists common
+-------------------- */
+.split-lists {
+  @extend .ib-range;
+
+  $width: 100, 47.5, 29.5, 23, 18.5, 15;
+  @for $i from 1 through length($width) {
+    $mgn: (100% - (nth($width, $i) * $i)) / ($i - 1);
+    &.split-#{$i} {
+      li {
+        width: nth($width, $i)+%;
+        &:not(:nth-child(#{$i}n+1)) {
+          margin-left: $mgn;
+        }
+        &:not(:nth-child(-n+#{$i})) {
+          margin-top: $mgn;
+        }
+      }
+    }
+  }
+}
+
+
+/* form common
+-------------------- */
+:focus::placeholder {
+  color: transparent !important;
+}
 
 
 
+// custom font awesome
+.fa-hatena {
+  &:before {
+    content: "B!";
+    font-family: Verdana;
+    font-weight: bold;
+  }
+}
