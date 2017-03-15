@@ -236,6 +236,75 @@ function get_breadcrumbs() {
 
 
 /**
+ * meta情報の取得
+ * @return array meta info
+*/
+function get_meta_info() {
+  global $wp_query;
+
+  $sep = ' | ';
+  $meta_title = get_field('sitename', 'options') ? get_field('sitename', 'options') : get_bloginfo('name');
+  $description = get_field('description', 'options') ? get_field('description', 'options') : get_bloginfo('description');
+  $keywords = get_field('keywords', 'options') ? get_field('keywords', 'options') : '';
+  // グローバルOG Image
+  $glb_og = get_field('og-image', 'options') ? get_field('og-image', 'options') : array();
+  $glb_og = !empty($glb_og) ? $glb_og['url'] : get_bloginfo('template_url').'/images/noimage.jpg';
+  // オリジナルOG Image
+  $org_og = get_field('og-image') ? get_field('og-image') : array();
+  $og_image = !empty($org_og) ? $org_og['url'] : $glb_og;
+
+  // デフォルト（ホーム・アーカイブ）
+  $meta = array(
+    'title' => wp_title($sep, false, 'right') . $meta_title,
+    'description' => $description,
+    'keywords' => $keywords,
+    'og_image' => $og_image,
+    'url' => get_my_url(),
+  );
+
+  if ( is_page() ) {
+    $post_obj = $wp_query->get_queried_object();
+
+    if ( $post_obj->post_parent != 0 ) {
+      // 親ページがある場合
+      $parent_title = get_the_title($post_obj->post_parent);
+      $title = get_the_title();
+      $meta['title'] = $title. $sep .$parent_title. $sep .$meta_title;
+    }
+  } // end is_page
+
+  if( is_single()) {
+    $post_type = get_query_var('post_type');
+    $post_obj  = get_post_type_object($post_type);
+
+    if( $post_type != '' ) {
+      $meta['title'] = get_the_title().$sep.$post_obj->label.$sep.$meta_title;
+    }
+  }// end is_single
+
+  if( is_tax() ){
+    // カスタムタクソノミーページ
+    // ターム情報を取得
+    $terms     = $wp_query->queried_object;
+    $taxonomy  = get_query_var('taxonomy');
+    $myterm    = get_term_by('slug', get_query_var('term'), $taxonomy);
+    $post_type = get_taxonomy($taxonomy)->object_type[0];
+    $post_obj  = get_post_type_object($post_type);
+    // アーカイブ
+    $meta['title'] = esc_html($myterm->name). $sep .$post_obj->label . $sep .$meta_title;
+  } // end is_tax
+
+  if( is_search() ) {
+    // 検索結果
+    $s = isset($_GET['s']) ? $_GET['s'] : null;
+    $meta['title'] = $s. $sep .'検索結果'. $sep .$meta_title;
+  }
+
+  return $meta;
+}
+
+
+/**
  * URLフィールドからhrefを含むリンクを出力
  * @param  txt url文字列
  * @return txt hrefを含むurl文字列
@@ -307,6 +376,21 @@ function get_page_slug_link($slug = '') {
   return $url;
 }
 
+
+/**
+ * $_SERVERからURLを取得
+ * @return str URL
+*/
+function get_my_url() {
+  $protocol = empty($_SERVER['HTTPS']) ? 'http://' : 'https://';
+  $host = $_SERVER['HTTP_HOST'];
+  $request = $_SERVER['REQUEST_URI'];
+  $search = $_SERVER['QUERY_STRING'];
+  $path = str_replace('?'.$search, '', $request);
+  $URL = $protocol . $host . $path;
+
+  return $URL;
+}
 
 
 ?>
