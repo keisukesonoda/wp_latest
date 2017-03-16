@@ -267,13 +267,27 @@ function get_meta_info() {
 
     if ( $post_obj->post_parent != 0 ) {
       // 親ページがある場合
-      $parent_title = get_the_title($post_obj->post_parent);
+      $parent_obj = get_post($post_obj->post_parent);
+
+      $parent_title = $parent_obj->post_title;
       $title = get_the_title();
       $meta['title'] = $title. $sep .$parent_title. $sep .$meta_title;
+
+      if ( $parent_obj->post_parent != 0 ) {
+        // 祖父ページがある場合
+        $grand_obj = get_post($parent_obj->post_parent);
+
+        $grand_title = $grand_obj->post_title;
+        $title = get_the_title();
+        $meta['title'] = $title. $sep .$parent_title. $sep. $grand_title. $sep .$meta_title;
+      }
     }
   } // end is_page
 
-  if( is_single()) {
+  if ( is_archive() ) {
+  }
+
+  if( is_single() ) {
     $post_type = get_query_var('post_type');
     $post_obj  = get_post_type_object($post_type);
 
@@ -297,7 +311,7 @@ function get_meta_info() {
   if( is_search() ) {
     // 検索結果
     $s = isset($_GET['s']) ? $_GET['s'] : null;
-    $meta['title'] = $s. $sep .'検索結果'. $sep .$meta_title;
+    $meta['title'] = $s .'を含む検索結果'. $sep .$meta_title;
   }
 
   return $meta;
@@ -391,6 +405,9 @@ function get_my_url() {
 
   return $URL;
 }
+
+
+
 
 
 ?>
