@@ -2484,8 +2484,8 @@
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url("./fonts/fontawesome-webfont.eot?v=4.7.0");
-  src: url("./fonts/fontawesome-webfont.eot?#iefix&v=4.7.0") format("embedded-opentype"), url("./fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"), url("./fonts/fontawesome-webfont.woff?v=4.7.0") format("woff"), url("./fonts/fontawesome-webfont.ttf?v=4.7.0") format("truetype"), url("./fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format("svg");
+  src: url("//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.eot?v=4.7.0");
+  src: url("//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0") format("embedded-opentype"), url("//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"), url("//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0") format("woff"), url("//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf?v=4.7.0") format("truetype"), url("//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -5688,9 +5688,9 @@ button.ti {
 }
 
 /* -------------------------
-  parts
+  parts common
 ------------------------- */
-/* wrap content
+/* wrap content common
 -------------------- */
 .wrapper {
   width: 100%;
@@ -5698,7 +5698,7 @@ button.ti {
   overflow: hidden;
 }
 
-/* texts
+/* texts common
 -------------------- */
 .tdu {
   text-decoration: underline;
@@ -5708,7 +5708,7 @@ button.ti {
   text-decoration: none !important;
 }
 
-/* links
+/* links common
 -------------------- */
 .lbs {
   color: #000000;
@@ -5815,14 +5815,14 @@ button.ti {
   float: left;
 }
 
-.ib-range {
+.ib-range, .split-lists {
   font-size: 0;
   display: table;
   width: 100%;
   table-layout: fixed;
 }
 
-.ib-range > * {
+.ib-range > *, .split-lists > * {
   font-size: 14px;
   display: inline-block;
   vertical-align: top;
@@ -5841,6 +5841,101 @@ button.ti {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+/* lists common
+-------------------- */
+.split-lists.split-1 li {
+  width: 100%;
+}
+
+.split-lists.split-1 li:not(:nth-child(1n+1)) {
+  margin-left: NaN;
+}
+
+.split-lists.split-1 li:not(:nth-child(-n+1)) {
+  margin-top: NaN;
+}
+
+.split-lists.split-2 li {
+  width: 47.5%;
+}
+
+.split-lists.split-2 li:not(:nth-child(2n+1)) {
+  margin-left: 5%;
+}
+
+.split-lists.split-2 li:not(:nth-child(-n+2)) {
+  margin-top: 5%;
+}
+
+.split-lists.split-3 li {
+  width: 29.5%;
+}
+
+.split-lists.split-3 li:not(:nth-child(3n+1)) {
+  margin-left: 5.75%;
+}
+
+.split-lists.split-3 li:not(:nth-child(-n+3)) {
+  margin-top: 5.75%;
+}
+
+.split-lists.split-4 li {
+  width: 23%;
+}
+
+.split-lists.split-4 li:not(:nth-child(4n+1)) {
+  margin-left: 2.66667%;
+}
+
+.split-lists.split-4 li:not(:nth-child(-n+4)) {
+  margin-top: 2.66667%;
+}
+
+.split-lists.split-5 li {
+  width: 18.5%;
+}
+
+.split-lists.split-5 li:not(:nth-child(5n+1)) {
+  margin-left: 1.875%;
+}
+
+.split-lists.split-5 li:not(:nth-child(-n+5)) {
+  margin-top: 1.875%;
+}
+
+.split-lists.split-6 li {
+  width: 15%;
+}
+
+.split-lists.split-6 li:not(:nth-child(6n+1)) {
+  margin-left: 2%;
+}
+
+.split-lists.split-6 li:not(:nth-child(-n+6)) {
+  margin-top: 2%;
+}
+
+/* form common
+-------------------- */
+:focus::-webkit-input-placeholder {
+  color: transparent !important;
+}
+:focus::-moz-placeholder {
+  color: transparent !important;
+}
+:focus:-ms-input-placeholder {
+  color: transparent !important;
+}
+:focus::placeholder {
+  color: transparent !important;
+}
+
+.fa-hatena:before {
+  content: "B!";
+  font-family: Verdana;
+  font-weight: bold;
 }
 
 /* -------------------------

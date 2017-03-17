@@ -1,4 +1,3 @@
-
 <?php
 /*
 * Support Wordpress Native functions
