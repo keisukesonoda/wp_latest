@@ -49,11 +49,15 @@ function custom_main_query( $query ) {
 }
 add_action( 'pre_get_posts', 'custom_main_query' );
 
+
 /**
-* Add Editor Styles
-*/
+ * Add Editor Styles
+ */
 function theme_add_editor_styles(){
-  add_editor_style('editor-style.css');
+  add_editor_style( array(
+    'style.css',
+    'editor-style.css'
+  ));
 }
 add_action('after_setup_theme', 'theme_add_editor_styles');
 
@@ -70,6 +74,20 @@ function my_acf_init() {
   acf_update_setting('google_api_key', 'AIzaSyA67wAaMVxSlZu5n75TO8hLCWXGkEVI2r4');
 }
 // add_action('acf/init', 'my_acf_init');
+
+
+/**
+ * 特定のページで404ページを返す
+ */
+function status404() {
+  global $wp_query;
+
+  if ( is_attachment() ) {
+    $wp_query->set_404();
+    status_header(404);
+  }
+}
+add_action('template_redirect', 'status404');
 
 
 
