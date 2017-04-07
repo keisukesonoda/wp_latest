@@ -240,61 +240,81 @@ function get_breadcrumbs() {
 */
 function get_meta_info() {
   global $wp_query;
-
   $sep = ' | ';
+  // グローバルサイトタイトル
   $meta_title = get_field('sitename', 'options') ? get_field('sitename', 'options') : get_bloginfo('name');
+  // グローバルsnsタイトル
+  $glb_sns_title = get_field('og-title', 'options') ? get_field('og-title', 'options') : wp_title($sep, false, 'right'). $meta_title;
+  // 記事個別SNSタイトル
+  $sns_title = get_field('og-title') ? get_field('og-title') :  $glb_sns_title;
+  // グローバルサイトディスクリプション
   $description = get_field('description', 'options') ? get_field('description', 'options') : get_bloginfo('description');
+  // グローバルSNSディスクリプション
+  $glb_sns_description = get_field('og-description', 'options') ? get_field('og-description', 'options') : $description;
+  // 記事個別SNSディスクリプション
+  $sns_description = get_field('og-description') ? get_field('og-description') : $glb_sns_description;
+  // グローバルサイトキーワード
   $keywords = get_field('keywords', 'options') ? get_field('keywords', 'options') : '';
   // グローバルOG Image
-  $glb_og = get_field('og-image', 'options') ? get_field('og-image', 'options') : array();
-  $glb_og = !empty($glb_og) ? $glb_og['url'] : get_bloginfo('template_url').'/images/noimage.jpg';
+  $glb_og_image = get_field('og-image', 'options') ? get_field('og-image', 'options') : array();
+  $glb_og_image = !empty($glb_og_image) ? $glb_og_image['url'] : get_bloginfo('template_url').'/images/noimage.jpg';
   // オリジナルOG Image
-  $org_og = get_field('og-image') ? get_field('og-image') : array();
-  $og_image = !empty($org_og) ? $org_og['url'] : $glb_og;
-
-  // デフォルト（ホーム・アーカイブ）
+  $org_og_image = get_field('og-image') ? get_field('og-image') : array();
+  $og_image = !empty($org_og_image) ? $org_og_image['url'] : $glb_og_image;
+  // デフォルト（ホーム）
   $meta = array(
-    'title' => wp_title($sep, false, 'right') . $meta_title,
+    'title' => wp_title($sep, false, 'right'). $meta_title,
     'description' => $description,
     'keywords' => $keywords,
-    'og_image' => $og_image,
+    'og-title' => $sns_title,
+    'og-description' => $sns_description,
+    'og-image' => $og_image,
     'url' => get_my_url(),
   );
-
   if ( is_page() ) {
+    // 固定ページ
     $post_obj = $wp_query->get_queried_object();
-
     if ( $post_obj->post_parent != 0 ) {
       // 親ページがある場合
       $parent_obj = get_post($post_obj->post_parent);
-
       $parent_title = $parent_obj->post_title;
       $title = get_the_title();
       $meta['title'] = $title. $sep .$parent_title. $sep .$meta_title;
-
       if ( $parent_obj->post_parent != 0 ) {
         // 祖父ページがある場合
         $grand_obj = get_post($parent_obj->post_parent);
-
         $grand_title = $grand_obj->post_title;
         $title = get_the_title();
         $meta['title'] = $title. $sep .$parent_title. $sep. $grand_title. $sep .$meta_title;
       }
     }
   } // end is_page
-
   if ( is_archive() ) {
+    // 投稿タイプアーカイブ
+    $post_type = get_query_var('post_type');
+    // アーカイブ独自のog設定取得
+    if ( have_rows('post-type', 'options') ) {
+      while ( have_rows('post-type', 'options') ) : the_row();
+        // 表示している投稿タイプ名と一致したら配列に格納
+        if ( $post_type == get_sub_field('post-type-name') ) {
+          $meta['og-title'] = get_sub_field('og-title');
+          $meta['og-description'] = get_sub_field('og-description');
+          // og:image
+          $image = get_sub_field('og-image');
+          $meta['og-image'] = !empty($image) ? $image['url'] : $meta['og-image'];
+          break;
+        }
+      endwhile;
+    }
   }
-
-  if( is_single() ) {
+  if( is_single()) {
+    // 詳細ページ
     $post_type = get_query_var('post_type');
     $post_obj  = get_post_type_object($post_type);
-
     if( $post_type != '' ) {
       $meta['title'] = get_the_title().$sep.$post_obj->label.$sep.$meta_title;
     }
   }// end is_single
-
   if( is_tax() ){
     // カスタムタクソノミーページ
     // ターム情報を取得
@@ -306,13 +326,11 @@ function get_meta_info() {
     // アーカイブ
     $meta['title'] = esc_html($myterm->name). $sep .$post_obj->label . $sep .$meta_title;
   } // end is_tax
-
   if( is_search() ) {
     // 検索結果
     $s = isset($_GET['s']) ? $_GET['s'] : null;
-    $meta['title'] = $s .'を含む検索結果'. $sep .$meta_title;
+    $meta['title'] = $s. $sep .'検索結果'. $sep .$meta_title;
   }
-
   return $meta;
 }
 

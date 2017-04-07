@@ -13,25 +13,25 @@ require_once dirname(dirname(__FILE__)) . '/' . get_stylesheet() .'/functions/cp
  * ACFオプション設定
  */
 if ( function_exists('acf_add_options_page') ) {
-	acf_add_options_page(array(
-		'page_title' => 'サイト設定',
-		'menu_title' => 'サイト設定',
-		'menu_slug'	=> 'theme-general-settings',
-		'capability' => 'edit_posts',
-		'redirect'	 => false
-	));
+  acf_add_options_page(array(
+    'page_title' => 'サイト設定',
+    'menu_title' => 'サイト設定',
+    'menu_slug' => 'theme-general-settings',
+    'capability' => 'edit_posts',
+    'redirect'   => false
+  ));
 
-	acf_add_options_sub_page(array(
-		'page_title' => 'ヘッダ設定',
-		'menu_title' => 'header',
-		'parent_slug'=> 'theme-general-settings'
-	));
+  acf_add_options_sub_page(array(
+    'page_title' => 'ヘッダ設定',
+    'menu_title' => 'header',
+    'parent_slug'=> 'theme-general-settings'
+  ));
 
-	acf_add_options_sub_page(array(
-		'page_title' => 'フッタ設定',
-		'menu_title' => 'footer',
-		'parent_slug'=> 'theme-general-settings'
-	));
+  acf_add_options_sub_page(array(
+    'page_title' => 'フッタ設定',
+    'menu_title' => 'footer',
+    'parent_slug'=> 'theme-general-settings'
+  ));
 }
 
 /**
@@ -53,7 +53,7 @@ add_action( 'pre_get_posts', 'custom_main_query' );
 * Add Editor Styles
 */
 function theme_add_editor_styles(){
-	add_editor_style('editor-style.css');
+  add_editor_style('editor-style.css');
 }
 add_action('after_setup_theme', 'theme_add_editor_styles');
 
