@@ -247,30 +247,35 @@ function get_meta_info() {
   $glb_sns_title = get_field('og-title', 'options') ? get_field('og-title', 'options') : wp_title($sep, false, 'right'). $meta_title;
   // 記事個別SNSタイトル
   $sns_title = get_field('og-title') ? get_field('og-title') :  $glb_sns_title;
+
   // グローバルサイトディスクリプション
   $description = get_field('description', 'options') ? get_field('description', 'options') : get_bloginfo('description');
   // グローバルSNSディスクリプション
   $glb_sns_description = get_field('og-description', 'options') ? get_field('og-description', 'options') : $description;
   // 記事個別SNSディスクリプション
   $sns_description = get_field('og-description') ? get_field('og-description') : $glb_sns_description;
+
   // グローバルサイトキーワード
   $keywords = get_field('keywords', 'options') ? get_field('keywords', 'options') : '';
+
   // グローバルOG Image
   $glb_og_image = get_field('og-image', 'options') ? get_field('og-image', 'options') : array();
   $glb_og_image = !empty($glb_og_image) ? $glb_og_image['url'] : get_bloginfo('template_url').'/images/noimage.jpg';
   // オリジナルOG Image
   $org_og_image = get_field('og-image') ? get_field('og-image') : array();
   $og_image = !empty($org_og_image) ? $org_og_image['url'] : $glb_og_image;
+
   // デフォルト（ホーム）
   $meta = array(
     'title' => wp_title($sep, false, 'right'). $meta_title,
     'description' => $description,
     'keywords' => $keywords,
-    'og-title' => $sns_title,
-    'og-description' => $sns_description,
-    'og-image' => $og_image,
+    'og-title' => is_home() ? $glb_sns_title : $sns_title,
+    'og-description' => is_home() ? $glb_sns_description : $sns_description,
+    'og-image' => is_home() ? $glb_og_image : $og_image,
     'url' => get_my_url(),
   );
+
   if ( is_page() ) {
     // 固定ページ
     $post_obj = $wp_query->get_queried_object();
