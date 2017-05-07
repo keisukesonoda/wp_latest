@@ -22,15 +22,11 @@ if ( function_exists('acf_add_options_page') ) {
   ));
 
   acf_add_options_sub_page(array(
-    'page_title' => 'ヘッダ設定',
-    'menu_title' => 'header',
-    'parent_slug'=> 'theme-general-settings'
-  ));
-
-  acf_add_options_sub_page(array(
-    'page_title' => 'フッタ設定',
-    'menu_title' => 'footer',
-    'parent_slug'=> 'theme-general-settings'
+    'page_title'  => '一覧ページSNS設定',
+    'menu_title'  => '一覧ページSNS設定',
+    'parent_slug' => 'theme-general-settings',
+    'menu_slug'   => 'sns-settings',
+    'capability'  => 'manage_options',
   ));
 }
 
