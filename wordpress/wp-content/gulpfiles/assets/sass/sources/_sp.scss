@@ -1,0 +1,115 @@
+//-------------------------------------
+// import files
+//-------------------------------------
+// @import "wp/wp_theme_sp";
+@import "mixin";
+@import "keyframes";
+@import "../libs/font-awesome-4.7.0/scss/font-awesome";
+@import "settings/reset";
+@import "settings/general";
+@import "settings/setting_sp";
+@import "settings/base";
+@import "parts/parts_common";
+@import "parts/parts_sp";
+@import "parts/loading";
+@import "helper";
+@import "wp/wp_native";
+@import "wp/wp_parts_common";
+@import "wp/wp_parts_sp";
+@import "wp/wp_cf7_sp";
+
+$mgnBase: 8%;
+
+$headerHeight: 14%;
+
+$colors: (
+'text-base': $color-a,
+);
+
+$lightCol: 80;
+
+
+/* --------------------
+  common parts
+-------------------- */
+
+/* titles
+-------------------- */
+.page-title {
+}
+
+.section-title {
+}
+
+
+/* colors
+-------------------- */
+@each $name, $color in $colors {
+  .bg-#{$name} {
+    background-color: $color;
+  }
+  .col-#{$name} {
+    color: $color;
+  }
+  .hov-col-#{$name} {
+    color: $color;
+  }
+}
+
+
+/* texts
+-------------------- */
+.hov-tdu {
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+
+/* --------------------
+  common sections
+-------------------- */
+body {
+  @include getFontSize(22);
+  background-color: #f0f0f0;
+}
+
+.ib-range {
+  > * {
+    @include getFontSize(24);
+  }
+}
+
+.wrapper {
+}
+
+
+/* contents
+-------------------- */
+.contents {
+  min-height: 300px;
+}
+
+
+/* header
+-------------------- */
+.header {
+}
+
+
+/* footer
+-------------------- */
+.footer {
+}
+
+
+/* ナビ共通
+-------------------- */
+.nav {
+}
+
+
+/* トップ
+-------------------- */
+body.home {
+}

@@ -1,0 +1,56 @@
+// PC general settinngs
+// -------------------------------------
+
+$container: (
+  lg: 980px,
+  md: 875px,
+  sm: 690px,
+  xs: 800px,
+);
+
+$main: map-get($container, md);
+$side: 280px;
+
+$wp-margin-base: 2em;
+
+$hoverTransition: .2s;
+
+// $font-family-base: $yuGothic;
+// $font-family-base: meiryoFont;
+$font-family-base: $gothicFont;
+
+$font-size-base: 14px;
+
+$font-size-m1: $font-size-base - 1px;
+$font-size-m2: $font-size-base - 2px;
+$font-size-m3: $font-size-base - 3px;
+$font-size-m4: $font-size-base - 4px;
+$font-size-m5: $font-size-base - 5px;
+$font-size-m6: $font-size-base - 6px;
+$font-size-m7: $font-size-base - 7px;
+$font-size-m8: $font-size-base - 8px;
+$font-size-m9: $font-size-base - 9px;
+$font-size-m10: $font-size-base - 10px;
+
+$font-size-p1: $font-size-base + 1px;
+$font-size-p2: $font-size-base + 2px;
+$font-size-p3: $font-size-base + 3px;
+$font-size-p4: $font-size-base + 4px;
+$font-size-p5: $font-size-base + 5px;
+$font-size-p6: $font-size-base + 6px;
+$font-size-p7: $font-size-base + 7px;
+$font-size-p8: $font-size-base + 8px;
+$font-size-p9: $font-size-base + 9px;
+$font-size-p10: $font-size-base + 10px;
+
+// Spaces
+$space-base: 5px;
+$space-2: $space-base * 2;
+$space-3: $space-base * 3;
+$space-4: $space-base * 4;
+$space-5: $space-base * 5;
+$space-6: $space-base * 6;
+$space-7: $space-base * 7;
+$space-8: $space-base * 8;
+$space-9: $space-base * 9;
+$space-10: $space-base * 10;
