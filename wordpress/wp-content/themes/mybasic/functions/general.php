@@ -242,38 +242,44 @@ function get_meta_info() {
   global $wp_query;
   $sep = ' | ';
   // グローバルサイトタイトル
-  $meta_title = get_field('sitename', 'options') ? get_field('sitename', 'options') : get_bloginfo('name');
+  $meta_title = get_field('sitename', 'options') ?: get_bloginfo('name');
   // グローバルsnsタイトル
-  $glb_sns_title = get_field('og-title', 'options') ? get_field('og-title', 'options') : wp_title($sep, false, 'right'). $meta_title;
+  $glb_sns_title = get_field('og-title', 'options') ?: $meta_title;
   // 記事個別SNSタイトル
-  $sns_title = get_field('og-title') ? get_field('og-title') :  $glb_sns_title;
+  $sns_title = get_field('og-title') ?: $glb_sns_title;
+  // wp_titleを含めた各タイトル
+  $title = wp_title($sep, false, 'right') . $meta_title;
+  $og_title = $sns_title . $sep . $meta_title;
 
   // グローバルサイトディスクリプション
-  $description = get_field('description', 'options') ? get_field('description', 'options') : get_bloginfo('description');
+  $description = get_field('description', 'options') ?: get_bloginfo('description');
   // グローバルSNSディスクリプション
-  $glb_sns_description = get_field('og-description', 'options') ? get_field('og-description', 'options') : $description;
+  $glb_sns_description = get_field('og-description', 'options') ?: $description;
   // 記事個別SNSディスクリプション
-  $sns_description = get_field('og-description') ? get_field('og-description') : $glb_sns_description;
+  $og_description = get_field('og-description') ?: $glb_sns_description;
 
   // グローバルサイトキーワード
-  $keywords = get_field('keywords', 'options') ? get_field('keywords', 'options') : '';
+  $keywords = get_field('keywords', 'options') ?: '';
 
   // グローバルOG Image
-  $glb_og_image = get_field('og-image', 'options') ? get_field('og-image', 'options') : array();
+  $glb_og_image = get_field('og-image', 'options') ?: array();
   $glb_og_image = !empty($glb_og_image) ? $glb_og_image['url'] : get_bloginfo('template_url').'/images/noimage.jpg';
   // オリジナルOG Image
-  $org_og_image = get_field('og-image') ? get_field('og-image') : array();
+  $org_og_image = get_field('og-image') ?: array();
   $og_image = !empty($org_og_image) ? $org_og_image['url'] : $glb_og_image;
+
+  // オリジナルOG URL
+  $og_url = get_field('og-url') ?: get_my_url();
 
   // デフォルト（ホーム）
   $meta = array(
-    'title' => wp_title($sep, false, 'right'). $meta_title,
+    'title' => $title,
     'description' => $description,
     'keywords' => $keywords,
-    'og-title' => is_home() ? $glb_sns_title : $sns_title,
-    'og-description' => is_home() ? $glb_sns_description : $sns_description,
+    'og-title' => $og_title,
+    'og-description' => $og_description,
     'og-image' => is_home() ? $glb_og_image : $og_image,
-    'url' => get_my_url(),
+    'url' => $og_url,
   );
 
   if ( is_page() ) {
@@ -302,11 +308,13 @@ function get_meta_info() {
       while ( have_rows('post-type', 'options') ) : the_row();
         // 表示している投稿タイプ名と一致したら配列に格納
         if ( $post_type == get_sub_field('post-type-name') ) {
-          $meta['og-title'] = get_sub_field('og-title');
-          $meta['og-description'] = get_sub_field('og-description');
+          $meta['og-title'] = get_sub_field('og-title') ? get_sub_field('og-title') . $sep . $meta_title : $meta['title'];
+          $meta['og-description'] = get_sub_field('og-description') ?: $meta['description'];
           // og:image
           $image = get_sub_field('og-image');
           $meta['og-image'] = !empty($image) ? $image['url'] : $meta['og-image'];
+          // og:url
+          $meta['url'] = get_sub_field('og-url') ?: $og_url;
           break;
         }
       endwhile;
@@ -317,7 +325,8 @@ function get_meta_info() {
     $post_type = get_query_var('post_type');
     $post_obj  = get_post_type_object($post_type);
     if( $post_type != '' ) {
-      $meta['title'] = get_the_title().$sep.$post_obj->label.$sep.$meta_title;
+      $meta['title'] = get_the_title() . $sep . $post_obj->label . $sep . $meta_title;
+      $meta['og-title'] = $sns_title . $sep . $post_obj->label . $sep . $meta_title;
     }
   }// end is_single
   if( is_tax() ){
@@ -329,12 +338,12 @@ function get_meta_info() {
     $post_type = get_taxonomy($taxonomy)->object_type[0];
     $post_obj  = get_post_type_object($post_type);
     // アーカイブ
-    $meta['title'] = esc_html($myterm->name). $sep .$post_obj->label . $sep .$meta_title;
+    $meta['title'] = esc_html($myterm->name) . $sep . $post_obj->label . $sep . $meta_title;
   } // end is_tax
   if( is_search() ) {
     // 検索結果
     $s = isset($_GET['s']) ? $_GET['s'] : null;
-    $meta['title'] = $s. $sep .'検索結果'. $sep .$meta_title;
+    $meta['title'] = $s . $sep . '検索結果' . $sep . $meta_title;
   }
   return $meta;
 }
@@ -343,11 +352,15 @@ function get_meta_info() {
 /**
  * URLフィールドからhrefを含むリンクを出力
  * @param  txt url文字列
- * @return txt hrefを含むurl文字列
+ * @return ary hrefを含むurl文字列とtarget
 */
 function get_acf_href($txt = '') {
   $href = $txt !== '' ? 'href="'. $txt .'"' : '';
-  return $href;
+  $result = array(
+    'href' => $href,
+    'activity' => !$href ? 'disable' : '',
+  );
+  return $result;
 }
 
 
@@ -426,6 +439,154 @@ function get_my_url() {
   $URL = $protocol . $host . $path;
 
   return $URL;
+}
+
+
+/**
+ * 子階層を含めたメニューを返却する
+ * @return array
+*/
+function get_nav_menus($nav_name = '') {
+  global $UA;
+  $navs = wp_get_nav_menu_items($nav_name);
+  if ( !$nav_name || empty($navs) ) return;
+  // 返却用の配列作成
+  $result = array();
+  foreach ( $navs as $nav ) {
+    // トラッキング用のポジション取得
+    $position = 'other';
+    if ( strpos($nav_name, 'gnav') !== false ) $position = 'header';
+    elseif ( strpos($nav_name, 'fnav') !== false ) $position = 'footer';
+
+    // メニュー用カスタムフィールド値の取得（指定がなければmenuSubCategoryとeventLabelは同一）
+    $menu_sub_category = $event_label = get_field('nav-menu-sub-category', $nav);
+    if ( get_field('flg-origin-label', $nav) ) {
+      // 独自のeventLabelを設定
+      $event_label = get_field('nav-event-label', $nav);
+      if ( get_field('flg-device-label', $nav) ) {
+        // デバイス別のイベントラベル設定がある場合（ヘッダ）
+        if ( !$UA['SP'] ) $event_label = get_field('nav-event-label-pc', $nav);
+        else              $event_label = get_field('nav-event-label-sp', $nav);
+      }
+    }
+
+    if ( $nav->menu_item_parent == 0 ) {
+      // 親階層のメニューを取得・格納
+      $type = 'wp-menu';
+      switch ($nav->object) {
+        case 'archive': $type = $type . '-post-type-'.$nav->type; break;
+        case 'page': $type = $type . '-page'; break;
+        case 'custom': $type = $type . '-custom'; break;
+        default: $type = $type . '-other'; break;
+      }
+      $class = isset($nav->classes[1]) ? $nav->classes[0] . ' ' . $nav->classes[1] : $nav->classes[0];
+      $result[$nav->ID] = array(
+        'ID' => $nav->ID,
+        'title' => $nav->title,
+        'class' => $class,
+        'url' => $nav->url,
+        'target' => $nav->target,
+        'type' => $type,
+        'tracking' => array(
+          'menu_category' => $position,
+          'menu_sub_category' => $menu_sub_category,
+          'event_label' => $event_label,
+        ),
+        'children' => array(),
+      );
+    } else {
+      // 子階層のメニューを親階層の配列に格納
+      $parent = $nav->menu_item_parent;
+      $result[$parent]['children'][$nav->ID] = array(
+        'ID' => $nav->ID,
+        'title' => $nav->title,
+        'class' => $nav->classes[0],
+        'url' => $nav->url,
+        'target' => $nav->target,
+        'position' => $position,
+      );
+    }
+  }
+  return $result;
+}
+
+
+/**
+ * アイキャッチの画像URL（なければnoimage）取得
+ * @param post_id Int ID
+ * @param size    Str (thumbnail, medium, large, full)
+ */
+function get_post_thumbnail_path($post_id, $size = 'full') {
+  if ( !$post_id ) return;
+  if (has_post_thumbnail($post_id) ) {
+    $image = wp_get_attachment_image_src(get_post_thumbnail_id($post_id), $size);
+    $path = $image[0];
+  } else {
+    $path = get_bloginfo('template_url').'/images/noimage.jpg';
+  }
+  return $path;
+}
+
+
+/**
+ * 画像情報の取得
+ */
+function get_image_info($image) {
+  if ( ctype_digit($image) ) {
+    // 画像IDの場合
+    $info = wp_get_attachment_image_src($image, 'full');
+    $result = array(
+      'url' => get_id_imagePath($image),
+      'class' => $info[1] < $info[2] ? 'cover' : 'contain',
+    );
+  } elseif ( is_array($image) ) {
+    // フィールドの場合
+    $info = wp_get_attachment_image_src($image['id'], 'full');
+    $result = array(
+      'url' => get_acf_imagePath($image),
+      'class' => $info[1] < $info[2] ? 'cover' : 'contain',
+    );
+  } elseif (!$image) {
+    // 何も入って来なかった場合
+    $result = array(
+      'url' => get_bloginfo('template_url').'/images/noimage.jpg',
+      'class' => 'contain',
+    );
+  }
+  return $result;
+}
+
+
+/**
+ * useragentの判別
+ */
+function get_userAgent() {
+  $UA = strtolower($_SERVER['HTTP_USER_AGENT']);
+
+  $result = array(
+    'TAB' => strpos($UA, 'windows') !== false && strpos($UA, 'touch') !== false ||
+           strpos($UA, 'android') !== false && strpos($UA, 'mobile') === false ||
+           strpos($UA, 'firefox') !== false && strpos($UA, 'tablet') !== false ||
+           strpos($UA, 'ipad') !== false ||
+           strpos($UA, 'kindle') !== false ||
+           strpos($UA, 'silk') !== false ||
+           strpos($UA, 'playbook') !== false,
+    'SP' => strpos($UA, 'windows') !== false && strpos($UA, 'phone') !== false ||
+          strpos($UA, 'android') !== false && strpos($UA, 'mobile') !== false ||
+          strpos($UA, 'firefox') !== false && strpos($UA, 'mobile') !== false ||
+          strpos($UA, 'iphone') !== false ||
+          strpos($UA, 'ipod') !== false ||
+          strpos($UA, 'blackberry') !== false ||
+          strpos($UA, 'bb') !== false,
+    'AD' => strpos($UA, 'android') !== false,
+    'WINDOWS' => strpos($UA, 'windows') !== false,
+    'MAC' => strpos($UA, 'mac os') !== false,
+    'CHROME' => strpos($UA, 'chrome') !== false && strpos($UA, 'edge') === false,
+    'IE' => strpos($UA, 'MSIE') !== false ||
+          strpos($UA, 'Trident/') !== false ||
+          strpos($UA, 'Edge') !== false,
+  );
+  return $result;
 }
 
 

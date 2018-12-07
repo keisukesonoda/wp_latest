@@ -28,26 +28,52 @@ if ( function_exists('acf_add_options_page') ) {
     'menu_slug'   => 'sns-settings',
     'capability'  => 'manage_options',
   ));
+
+  // acf_add_options_sub_page(array(
+  //   'page_title'  => 'ページ設定',
+  //   'menu_title'  => 'ページ設定',
+  //   'parent_slug' => 'theme-general-settings',
+  //   'menu_slug'   => 'top-settings',
+  //   'capability'  => 'manage_options',
+  // ));
 }
 
+
 /**
- * Hook: pre_get_posts
+ * ログイン画像変更
  */
-function custom_main_query( $query ) {
-  if ( is_admin() || !$query->is_main_query() ) return;
-
-  /**
-   * 
-   */
-  if ( $query->is_post_type_archive() ) {
-
-  }
+function login_logo_image() {
+  echo '<style type="text/css">
+    #login h1 a {
+    width: 140px;
+    height: 92px;
+    background: url(' . get_template_directory_uri() . '/images/logo_header.png) no-repeat !important;
+    background-size: cover !important;
+    }
+  </style>';
 }
-add_action( 'pre_get_posts', 'custom_main_query' );
+// add_action('login_head', 'login_logo_image');
 
 
 /**
- * Add Editor Styles
+ * ログイン画像URL変更
+ */
+function login_logo_url() {
+  return home_url();
+}
+// add_filter('login_headerurl', 'login_logo_url');
+
+/**
+ * ログイン画像title変更
+ */
+function login_logo_title(){
+  return get_bloginfo('name');
+}
+// add_filter('login_headertitle','login_logo_title');
+
+
+/**
+ * エディタにスタイルシートを適用
  */
 function theme_add_editor_styles(){
   add_editor_style( array(
@@ -59,17 +85,36 @@ add_action('after_setup_theme', 'theme_add_editor_styles');
 
 
 
-/*
-* User Define functions
-*/
-
+/* -----------------------------------
+* 認証関連
+----------------------------------- */
 /**
  * Google Map API Keyの登録
  */
 function my_acf_init() {
-  acf_update_setting('google_api_key', 'AIzaSyA67wAaMVxSlZu5n75TO8hLCWXGkEVI2r4');
+  acf_update_setting('google_api_key', '');
 }
 // add_action('acf/init', 'my_acf_init');
+
+
+
+/* -----------------------------------
+* フロント独自関数
+----------------------------------- */
+/**
+ * Hook: pre_get_posts
+ */
+function custom_main_query( $query ) {
+  if ( is_admin() || !$query->is_main_query() ) return;
+
+  /**
+   *
+   */
+  // if ( $query->is_post_type_archive() ) {
+  //   $query->set('posts_per_page', '2');
+  // }
+}
+// add_action( 'pre_get_posts', 'custom_main_query' );
 
 
 /**
@@ -78,12 +123,46 @@ function my_acf_init() {
 function status404() {
   global $wp_query;
 
-  if ( is_attachment() ) {
+  // 詳細ページを404にするポストタイプ
+  $disable_post_types = array(
+    'mainvisual',
+    // 'banner',
+  );
+  // 外部リンク指定してる投稿は404
+  $post_type = get_query_var('post_type');
+  $is_disable = is_singular() && in_array($post_type, $disable_post_types);
+  // 外部リンク指定してる投稿も404
+  $disable_post = is_singular() && get_field('link-outside');
+
+  if ( is_attachment() || $is_disable || $disable_post ) {
     $wp_query->set_404();
     status_header(404);
   }
 }
 add_action('template_redirect', 'status404');
+
+
+/**
+ * アイキャッチ部分に説明文追加
+ */
+function add_featured_image_instruction( $content ) {
+  $post_type = get_post_type();
+  switch ($post_type) {
+    // ニュース
+    case 'news': $content .= '<span>size: 332 × 332</span>'; break;
+    // case 'product-en': $content .= '<span>size: 320 × 240</span>'; break;
+    // // スペシャル
+    // case 'special': $content .= '<span>size: 320 × 320</span>'; break;
+    // // お買い物
+    // case 'shopping': $content .= '<span>size: 1080 × 320</span>'; break;
+    // // キットカットを知る
+    // case 'about': $content .= '<span>size: 1080 × 320</span>'; break;
+    default:  break;
+  }
+  return $content;
+}
+add_filter( 'admin_post_thumbnail_html', 'add_featured_image_instruction');
+
 
 
 

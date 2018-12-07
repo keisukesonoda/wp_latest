@@ -6,33 +6,39 @@
   <?php $meta = get_meta_info(); ?>
   <title><?php echo $meta['title']; ?></title>
   <meta name="description" content="<?php echo $meta['description']; ?>">
-  <meta name="keywords" content="<?php echo $meta['keywords']; ?>">
+  <?php if ( $meta['keywords'] ) : // keywordsは入力がなければ不要 ?>
+    <meta name="keywords" content="<?php echo $meta['keywords']; ?>">
+  <?php endif; ?>
   <meta name="viewport" content="width=device-width">
 
-  <!-- OG -->
+  <?php // OG ?>
   <?php $og_type = is_home() ? 'website' : 'article'; ?>
-  <meta property="og:title" content="<?php echo $meta['title']; ?>">
   <meta property="og:type" content="<?php echo $og_type; ?>">
+  <meta property="og:title" content="<?php echo $meta['og-title']; ?>">
+  <meta property="og:description" content="<?php echo $meta['og-description']; ?>">
   <meta property="og:url" content="<?php echo $meta['url']; ?>">
-  <meta property="og:image" content="<?php echo $meta['og_image']; ?>">
+  <meta property="og:image" content="<?php echo $meta['og-image']; ?>">
 
-  <!-- favicon -->
-  <!-- <link rel="shortcut icon" href="<?php // bloginfo('template_url'); ?>/favicon.ico" /> -->
+  <?php // favicon ?>
+  <!-- <link rel="shortcut icon" href="<?php // echo get_template_directory_uri(); ?>/favicon.ico" /> -->
 
-  <!-- style sheets -->
-  <link id="sp-style" rel="stylesheet" href="<?php bloginfo('template_url'); ?>/style.sp.css" media="screen and (max-width: 767px)">
-  <link id="pc-style" rel="stylesheet" href="<?php bloginfo( 'stylesheet_url' ); ?>" media="screen and (min-width: 768px)">
+  <?php global $UA; $UA = get_userAgent(); ?>
+  <?php // style sheets ?>
+  <?php if ( !$UA['SP'] ) : ?>
+    <link rel="stylesheet" href="<?php echo get_stylesheet_uri(); ?>" media="all">
+  <?php else: ?>
+    <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/style.sp.css" media="all">
+  <?php endif; ?>
 
-  <!-- scripts -->
+  <?php // scripts ?>
   <?php wp_deregister_script( 'jquery' ); ?>
-  <?php wp_enqueue_script( 'init', get_bloginfo('template_url').'/js/init.js', array(), '1.0.0', false ); ?>
-  <?php wp_enqueue_script( 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js', array(), '1.11.3', true ); ?>
-  <?php wp_enqueue_script( 'main', get_bloginfo('template_url').'/js/main.js', array( 'jquery' ), '1.0', true ); ?>
+  <?php wp_enqueue_script( 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js', array(), '3.3.1', true ); ?>
+  <?php wp_enqueue_script( 'main', get_template_directory_uri().'/js/main.js', array( 'jquery' ), '1.0', true ); ?>
 
   <?php wp_head(); ?>
 </head>
 
-<body <?php body_class(); ?> data-temp="<?php bloginfo('template_url'); ?>">
+<body <?php body_class(); ?>>
 
   <div class="wrapper">
 
